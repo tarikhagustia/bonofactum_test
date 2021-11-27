@@ -6,6 +6,7 @@
             Made for me form
         </div>
         <div class="card-body">
+            @include('layouts.alert')
             <form method="POST" action="{{ route('inquiry.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="row">

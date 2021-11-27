@@ -23,8 +23,8 @@ class CreateInquiriesTable extends Migration
             $table->integer('acceptable_lead_time');
             $table->foreignId('type_id');
             $table->foreignId('material_id');
-            $table->text('description');
-            $table->text('references');
+            $table->text('description')->nullable();
+            $table->text('references')->nullable();
             $table->ipAddress('ip_address');
             $table->timestamps();
         });

@@ -8,9 +8,16 @@ use App\Models\Country;
 use App\Models\Material;
 use App\Models\Type;
 use Illuminate\Http\Request;
+use App\Service\InquiryService;
 
 class InquiryController extends Controller
 {
+    protected $inquiryService;
+
+    public function __construct(InquiryService $inquiryService)
+    {
+        $this->inquiryService = $inquiryService;    
+    }
     /**
      * Handle view customer inquiry form     
      */
@@ -28,6 +35,6 @@ class InquiryController extends Controller
      */
     public function store(CustomerInquiryRequest $request)
     {
-        $data = $request->all();
+        return $this->inquiryService->create($request->except('_token'));
     }
 }
