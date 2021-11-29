@@ -3,7 +3,9 @@
 namespace App\Service;
 
 use App\Events\InquiryCreated;
+use App\Jobs\TakeWebsiteScreenshot;
 use App\Models\Inquiry;
+use Storage;
 
 class InquiryService
 {
@@ -19,14 +21,11 @@ class InquiryService
             $data['references'] .= $filePath;
         }
 
-        // Store references as image if the reference link has been filled, maybe we use chromeium ?
-        if (isset($data['reference'])) {
-            // TODO : Do logic here
-            $filePath = "";
-            $data['references'] .= $filePath;
-        }
-
         // Some mapping
+        $referenceImage = null;
+        if(isset($data['reference'])) {
+            $referenceImage = $data['reference'];
+        }
         $data['type_id'] = $data['type'];
         $data['material_id'] = $data['material'];
         $data['country_id'] = $data['country'];
@@ -39,9 +38,14 @@ class InquiryService
         unset($data['reference']);
         unset($data['reference_image']);
 
+
         // Store data
         $inquiry = Inquiry::create($data);
-
+        // Store references as image if the reference link has been filled, maybe we use chromeium or pagespeed API ?
+        if (isset($referenceImage)) {
+            // TODO : Do logic here
+            TakeWebsiteScreenshot::dispatch($inquiry, $referenceImage);
+        }
         event(new InquiryCreated($inquiry));
         return redirect()->back()->with(['success' => 'Success creating inquiry, we will process your inquiry as soon as possible.']);
     }
