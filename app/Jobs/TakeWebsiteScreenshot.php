@@ -35,7 +35,13 @@ class TakeWebsiteScreenshot implements ShouldQueue
      */
     public function handle()
     {
-        $this->inquiry->references .= $this->fetchImage();
+        $a = $this->inquiry->references;
+        array_push($a, [
+            'path' => $this->fetchImage(),
+            'ts' => now()->format('Y-m-d H:i:s'),
+            'url' => $this->url
+        ]);
+        $this->inquiry->references = $a;
         $this->inquiry->save();
     }
 

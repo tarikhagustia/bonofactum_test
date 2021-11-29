@@ -13,12 +13,18 @@ class InquiryService
     public function create(array $data)
     {
         // Defind
-        $data['references'] = "";
+        $data['references'] = [];
 
         // Store image to public disk
         if (isset($data['reference_image'])) {
             $filePath = $data['reference_image']->store('inquiry/images', 'public');
-            $data['references'] .= $filePath;
+            $data['references'] = [
+                [
+                    'path' => $filePath,
+                    'ts' => now()->format('Y-m-d H:i:s'),
+                    'url' => null
+                ]
+            ];
         }
 
         // Some mapping

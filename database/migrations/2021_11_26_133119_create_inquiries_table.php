@@ -24,7 +24,7 @@ class CreateInquiriesTable extends Migration
             $table->foreignId('type_id');
             $table->foreignId('material_id');
             $table->text('description')->nullable();
-            $table->text('references')->nullable();
+            $table->json('references')->nullable();
             $table->ipAddress('ip_address');
             $table->timestamps();
         });
