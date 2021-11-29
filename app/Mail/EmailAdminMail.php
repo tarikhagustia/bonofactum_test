@@ -7,9 +7,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\URL;
 
-class CustomerInquiryEmail extends Mailable
+class EmailAdminMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,16 +30,6 @@ class CustomerInquiryEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Thank you for inquiry')
-            ->markdown('mail.customer-inquiry-email')->with('inquiry', $this->inquiry)
-            ->with('url', $this->generateSignedUrl());
-    }
-
-    protected function generateSignedUrl()
-    {
-        // TODO : Generate signed URL
-        return URL::temporarySignedRoute('inquiry.show', now()->addMonth(1), [
-            'inquiry' => $this->inquiry->id
-        ]);
+        return $this->subject('A new inquiry received')->markdown('mail.email-admin-mail')->with('inquiry', $this->inquiry);
     }
 }

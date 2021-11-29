@@ -16,3 +16,10 @@ use App\Http\Controllers\Customer\InquiryController;
 Route::get('/', [InquiryController::class, 'create'])->name('inquiry.create');
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 Route::get('/inquiry/{inquiry}', [InquiryController::class, 'show'])->name('inquiry.show');
+
+Auth::routes();
+
+Route::middleware('auth')->name('admin.')->group(function () {
+    Route::get('/admin/inquiries/{inquiry}')->name('inquiry.show');
+});
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
