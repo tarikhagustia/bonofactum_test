@@ -9,6 +9,7 @@ use App\Models\Material;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use App\Service\InquiryService;
+use Illuminate\Support\Facades\Cache;
 
 class InquiryController extends Controller
 {
@@ -16,16 +17,23 @@ class InquiryController extends Controller
 
     public function __construct(InquiryService $inquiryService)
     {
-        $this->inquiryService = $inquiryService;    
+        $this->inquiryService = $inquiryService;
     }
     /**
      * Handle view customer inquiry form     
      */
     public function create()
     {
-        $types = Type::all();
-        $materials = Material::all();
-        $countries = Country::all();
+        // Need to cache these things
+        $types = Cache::remember('TYPES', 10 * 1000, function () {
+            return Type::all();
+        });
+        $materials = Cache::remember('MATERIALS', 10 * 1000, function () {
+            return Material::all();
+        });
+        $countries = Cache::remember('COUNTRIES', 10 * 1000, function () {
+            return Country::all();
+        });
 
         return view('customer.inquery', compact('types', 'materials', 'countries'));
     }
